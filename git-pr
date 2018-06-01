@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+version() {
+  echo "Git PR v0.0.1"
+}
+
+usage() {
+  echo "Open a new PR for the current branch on GitHub"
+  echo ""
+  echo "Usage: git pr [options]"
+}
+
+main() {
+  local subcommand="$1"
+
+  case $subcommand in
+    "-v"|"--version")
+      version
+      exit 0
+      ;;
+
+    "-h"|"--help")
+      usage
+      exit 0
+      ;;
+
+    *)
+      run "$@"
+      ;;
+  esac
+
+  exit 0
+}
+
+getRemoteRepoName() {
+  git remote get-url origin | sed -r 's/^.*?github\.com:(.*?)\.git/\1/'
+}
+
+getBranchName() {
+  git name-rev --name-only HEAD 
+}
+
+getNewPrUrl() {
+  local repo="$(getRemoteRepoName)"
+  local branch="$(getBranchName)"
+
+  echo "https://github.com/$repo/pull/new/$branch"
+}
+
+run() {
+  local url=$(getNewPrUrl)
+
+  xdg-open $url
+}
+
+main "$@"
