@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 version() {
-  echo "Git PR v0.0.1"
+  echo "Git PR v0.0.2"
 }
 
 usage() {
@@ -33,22 +33,46 @@ main() {
 }
 
 getRemoteRepoName() {
-  git remote get-url origin | sed -r 's/^.*?github\.com:(.*?)\.git/\1/'
+  local repoName=$(git remote get-url origin 2> /dev/null | sed -r 's/^.*?github\.com:(.*?)\.git/\1/')
+
+  if [ "$repoName" = "" ]; then
+    echo "Not in a repository with a GitHub origin" > /dev/stderr
+    return 1
+  fi
+
+  echo "$repoName"
+  return 0
 }
 
 getBranchName() {
-  git name-rev --name-only HEAD 
+  local branchName="$(git name-rev --name-only HEAD 2> /dev/null)"
+
+  if [ "$repoName" = "" ]; then
+    echo "Unable to get branch name" > /dev/stderr
+    return 1
+  fi
+
+  echo "$branchName"
+  return 0
 }
 
 getNewPrUrl() {
   local repo="$(getRemoteRepoName)"
   local branch="$(getBranchName)"
 
+  if [ "$repo" = "" ] || [ "$branch" = "" ]; then
+    return 1
+  fi
+
   echo "https://github.com/$repo/pull/new/$branch"
 }
 
 run() {
   local url=$(getNewPrUrl)
+
+  if [ "$url" = "" ]; then
+    exit 1
+  fi
 
   xdg-open $url
 }
