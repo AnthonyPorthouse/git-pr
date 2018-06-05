@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 version() {
-  echo "Git PR v0.0.2"
+  echo "Git PR v0.0.3"
 }
 
 usage() {
@@ -74,7 +74,19 @@ run() {
     exit 1
   fi
 
-  xdg-open $url
+  case "$(uname -s)" in
+    "Linux")
+      xdg-open $url
+      return 0
+      ;;
+    "Dawrin")
+      open $url
+      return 0
+      ;;
+  esac
+
+  echo "Unknown System: $(uname -s)" > /dev/stderr
+  return 1
 }
 
 main "$@"
