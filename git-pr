@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 version() {
-  echo "Git PR v0.0.3"
+  echo "Git PR v0.0.4"
 }
 
 usage() {
@@ -47,7 +47,7 @@ getRemoteRepoName() {
 getBranchName() {
   local branchName="$(git name-rev --name-only HEAD 2> /dev/null)"
 
-  if [ "$repoName" = "" ]; then
+  if [ "$branchName" = "" ]; then
     echo "Unable to get branch name" > /dev/stderr
     return 1
   fi
