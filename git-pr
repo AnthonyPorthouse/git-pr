@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 version() {
-  echo "Git PR v0.0.4"
+  echo "Git PR v0.0.5"
 }
 
 usage() {
@@ -79,7 +79,7 @@ run() {
       xdg-open $url
       return 0
       ;;
-    "Dawrin")
+    "Darwin")
       open $url
       return 0
       ;;
